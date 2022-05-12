@@ -123,9 +123,9 @@ def crc_update(data):
 def _sendcommand(address, command):
     crc_clear()
     crc_update(address)
-    port.write(chr(address))
+    port.write(serialcmd.encode(chr(address)))
     crc_update(command)
-    port.write(chr(command))
+    port.write(serialcmd.encode(chr(command)))
     return
 
 
