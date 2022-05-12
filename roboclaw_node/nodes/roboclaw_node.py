@@ -250,8 +250,8 @@ class Node:
         if linear_x < -self.MAX_SPEED:
             linear_x = -self.MAX_SPEED
 
-        vr = linear_x + twist.angular.z * self.BASE_WIDTH / 20.0  # m/s
-        vl = linear_x - twist.angular.z * self.BASE_WIDTH / 20.0
+        vr = linear_x + twist.angular.z * self.BASE_WIDTH   # m/s
+        vl = linear_x - twist.angular.z * self.BASE_WIDTH 
 
         vr_ticks = int(vr * self.TICKS_PER_METER)  # ticks/s
         vl_ticks = int(vl * self.TICKS_PER_METER)
@@ -260,7 +260,7 @@ class Node:
 
         try:
             # This is a hack way to keep a poorly tuned PID from making noise at speed 0
-            if vr_ticks is 0 and vl_ticks is 0:
+            if vr_ticks == 0 and vl_ticks == 0:
                 roboclaw.ForwardM1(self.address, 0)
                 roboclaw.ForwardM2(self.address, 0)
             else:

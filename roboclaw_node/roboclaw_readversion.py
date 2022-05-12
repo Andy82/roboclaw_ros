@@ -15,11 +15,11 @@ class Mode():
 #Get version string
 write = rc.SetConfig(address, Mode.PACKETSERIAL)
 if write==False:
-	print "Can't write"
+	print("Can't write")
 
 response = rc.GetConfig(address)
 if response[0]==False:
-	print "Can't read"
+	print("Can't read")
 else:
-	print repr(response[1])
+	print(repr(response[1]))
 
