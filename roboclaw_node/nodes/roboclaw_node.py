@@ -163,15 +163,14 @@ class Node:
 
         try:
             version = roboclaw.ReadVersion(self.address)
+            if not version[0]:
+                rospy.logwarn("Could not get version from roboclaw")
+            else:
+                rospy.logdebug(repr(version[1]))
         except Exception as e:
             rospy.logwarn("Problem getting roboclaw version")
             rospy.logdebug(e)
             pass
-
-        if not version[0]:
-            rospy.logwarn("Could not get version from roboclaw")
-        else:
-            rospy.logdebug(repr(version[1]))
 
         roboclaw.SpeedM1M2(self.address, 0, 0)
         roboclaw.ResetEncoders(self.address)
