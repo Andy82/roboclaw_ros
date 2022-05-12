@@ -132,7 +132,7 @@ def _sendcommand(address, command):
 def _readchecksumword():
     data = port.read(2)
     if len(data) == 2:
-        crc = (ord(data[0]) << 8) | ord(data[1])
+        crc = ((data[0]) << 8) | (data[1])
         return 1, crc
     return 0, 0
 
