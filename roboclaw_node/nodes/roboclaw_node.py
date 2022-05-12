@@ -215,6 +215,7 @@ class Node:
             try:
                 status1, enc1, crc1 = roboclaw.ReadEncM1(self.address)
             except ValueError:
+                rospy.logwarn("Can't read ReadEncM1 value")
                 pass
             except OSError as e:
                 rospy.logwarn("ReadEncM1 OSError: %d", e.errno)
@@ -223,16 +224,20 @@ class Node:
             try:
                 status2, enc2, crc2 = roboclaw.ReadEncM2(self.address)
             except ValueError:
+                rospy.logwarn("Can't read ReadEncM2 value")
                 pass
             except OSError as e:
                 rospy.logwarn("ReadEncM2 OSError: %d", e.errno)
                 rospy.logdebug(e)
 
             if ('enc1' in vars()) and ('enc2' in vars()):
-                rospy.logdebug(" Encoders %d %d" % (enc1, enc2))
-                self.encodm.update_publish(enc1, enc2)
+                try:
+		    rospy.logdebug(" Encoders %d %d" % (enc1, enc2))
+                    self.encodm.update_publish(enc1, enc2)
+                    self.updater.update()
+		except:
+		    rospy.logdebug("No encoders")
 
-                self.updater.update()
             r_time.sleep()
 
     def cmd_vel_callback(self, twist):
@@ -244,8 +249,8 @@ class Node:
         if linear_x < -self.MAX_SPEED:
             linear_x = -self.MAX_SPEED
 
-        vr = linear_x + twist.angular.z * self.BASE_WIDTH / 2.0  # m/s
-        vl = linear_x - twist.angular.z * self.BASE_WIDTH / 2.0
+        vr = linear_x + twist.angular.z * self.BASE_WIDTH / 20.0  # m/s
+        vl = linear_x - twist.angular.z * self.BASE_WIDTH / 20.0
 
         vr_ticks = int(vr * self.TICKS_PER_METER)  # ticks/s
         vl_ticks = int(vl * self.TICKS_PER_METER)
@@ -259,6 +264,9 @@ class Node:
                 roboclaw.ForwardM2(self.address, 0)
             else:
                 roboclaw.SpeedM1M2(self.address, vr_ticks, vl_ticks)
+                rospy.logwarn("Motor R: %d", vr_ticks)
+                rospy.logwarn("Motor L: %d", vl_ticks)                
+                #roboclaw.SpeedAccelM1M2(self.address, 100, vr_ticks, vl_ticks)
         except OSError as e:
             rospy.logwarn("SpeedM1M2 OSError: %d", e.errno)
             rospy.logdebug(e)
