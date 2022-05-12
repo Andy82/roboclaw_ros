@@ -1,2 +1,2 @@
-source devel/setup.bash
+source ../../devel/setup.bash
 roslaunch roboclaw_node roboclaw.launch
