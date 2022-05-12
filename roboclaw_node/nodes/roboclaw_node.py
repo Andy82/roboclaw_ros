@@ -236,7 +236,7 @@ class Node:
                     self.encodm.update_publish(enc1, enc2)
                     self.updater.update()
                 except Exception as e:
-		            rospy.logdebug("No encoders")
+                    rospy.logdebug("No encoders")
                     rospy.logdebug(e)       
                     pass
 
