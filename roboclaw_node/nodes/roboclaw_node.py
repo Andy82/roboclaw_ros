@@ -232,7 +232,7 @@ class Node:
 
             if ('enc1' in vars()) and ('enc2' in vars()):
                 try:
-		    rospy.logdebug(" Encoders %d %d" % (enc1, enc2))
+			    rospy.logdebug(" Encoders %d %d" % (enc1, enc2))
                     self.encodm.update_publish(enc1, enc2)
                     self.updater.update()
 		except:
