@@ -179,7 +179,7 @@ def _readslong():
 
 def _writebyte(val):
     crc_update(val & 0xFF)
-    port.write(chr(val & 0xFF))
+    port.write(chr(val & 0xFF).encode())
 
 
 def _writesbyte(val):
@@ -692,7 +692,7 @@ def _write444444441(address, cmd, val1, val2, val3, val4, val5, val6, val7, val8
 def SendRandomData(cnt):
     for i in range(0, cnt):
         byte = random.getrandbits(8)
-        port.write(chr(byte))
+        port.write(chr(byte).encode())
     return
 
 
