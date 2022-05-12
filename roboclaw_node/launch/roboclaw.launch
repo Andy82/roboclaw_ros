@@ -4,8 +4,8 @@
     <arg name="dev" default="/dev/roboclaw"/>
     <arg name="baud" default="115200"/>
     <arg name="address" default="128"/>
-    <arg name="max_speed" default="0.1"/>
-    <arg name="ticks_per_meter" default="6"/>
+    <arg name="max_speed" default="0.5"/>
+    <arg name="ticks_per_meter" default="4000"/>
     <arg name="base_width" default="0.2"/>
     <arg name="run_diag" default="true"/>
 

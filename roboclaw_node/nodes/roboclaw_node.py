@@ -250,8 +250,8 @@ class Node:
         if linear_x < -self.MAX_SPEED:
             linear_x = -self.MAX_SPEED
 
-        vr = linear_x + twist.angular.z * self.BASE_WIDTH / 20.0  # m/s
-        vl = linear_x - twist.angular.z * self.BASE_WIDTH / 20.0
+        vr = linear_x + twist.angular.z * self.BASE_WIDTH   # m/s
+        vl = linear_x - twist.angular.z * self.BASE_WIDTH 
 
         vr_ticks = int(vr * self.TICKS_PER_METER)  # ticks/s
         vl_ticks = int(vl * self.TICKS_PER_METER)
