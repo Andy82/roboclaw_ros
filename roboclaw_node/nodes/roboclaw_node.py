@@ -15,9 +15,11 @@ __author__ = "bwbazemore@uga.edu (Brad Bazemore)"
 # TODO need to find some better was of handling OSerror 11 or preventing it, any ideas?
 
 class EncoderOdom:
-    def __init__(self, ticks_per_meter, base_width):
+    def __init__(self, ticks_per_meter, base_width, base_frame, odom_frame):
         self.TICKS_PER_METER = ticks_per_meter
         self.BASE_WIDTH = base_width
+        self.BASE_FRAME = base_frame
+        self.ODOM_FRAME = odom_frame
         self.odom_pub = rospy.Publisher('/odom', Odometry, queue_size=10)
         self.cur_x = 0
         self.cur_y = 0
@@ -88,12 +90,12 @@ class EncoderOdom:
         br.sendTransform((cur_x, cur_y, 0),
                          tf.transformations.quaternion_from_euler(0, 0, -cur_theta),
                          current_time,
-                         "base_link",
-                         "odom")
+                         self.BASE_FRAME,
+                         self.ODOM_FRAME)
 
         odom = Odometry()
         odom.header.stamp = current_time
-        odom.header.frame_id = 'odom'
+        odom.header.frame_id = self.ODOM_FRAME
 
         odom.pose.pose.position.x = cur_x
         odom.pose.pose.position.y = cur_y
@@ -107,7 +109,7 @@ class EncoderOdom:
         odom.pose.covariance[28] = 99999
         odom.pose.covariance[35] = 0.01
 
-        odom.child_frame_id = 'base_link'
+        odom.child_frame_id = self.BASE_FRAME
         odom.twist.twist.linear.x = vx
         odom.twist.twist.linear.y = 0
         odom.twist.twist.angular.z = vth
@@ -178,8 +180,10 @@ class Node:
         self.MAX_SPEED = float(rospy.get_param("~max_speed", "2.0"))
         self.TICKS_PER_METER = float(rospy.get_param("~tick_per_meter", "4342.2"))
         self.BASE_WIDTH = float(rospy.get_param("~base_width", "0.315"))
+        self.BASE_FRAME = rospy.get_param("~base_frame", "base_link")
+        self.ODOM_FRAME = rospy.get_param("~odom_frame", "odom")
 
-        self.encodm = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH)
+        self.encodm = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH, self.BASE_FRAME, self.ODOM_FRAME)
         self.last_set_speed_time = rospy.get_rostime()
 
         rospy.Subscriber("cmd_vel", Twist, self.cmd_vel_callback)
